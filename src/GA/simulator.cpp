@@ -1,23 +1,24 @@
-#include "define.hpp"
-#include "config.hpp"
-#include "individual.hpp"
+#include "GA/define.hpp"
+#include "GA/config.hpp"
+#include <vector>
 
-vector<Individual> s, t;
+std::vector<Individual> u, v, w;
 
 void Solve() {
-	IndividualInit(s, POPULATION);
+	IndividualInit(u, POPULATION);
 	for(int k=0; k<TIMES; ++k) {
-		for(int i=0; i<n; ++i)
-			for(int j=0; j<n; ++j)
-				if(i!=j && Random(PR_CROSS)) {
-					Cross(s[i], s[j], t);
-				}
-		for(int i=0; i<m; ++i)
+		Select(u, POPULATION);
+		v.clear();
+		for(int i=0; i<u.size(); ++i)
+			for(int j=0; j<u.size(); ++j)
+				if(i!=j && Random(PR_CROSS))
+					Cross(u[i], u[j], v);
+		w.clear();
+		for(auto &&x: v)
 			if(Random(PR_MUTATION))
-				Mutation(t, i);
-		Select(t, POPULATION);
-		s.swap(t);
-		t.clear();
+				Mutation(x, w);
+			else
+				w.push_back(x);
+		u.swap(w);
 	}
-	//
 }
