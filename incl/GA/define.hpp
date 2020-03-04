@@ -5,11 +5,12 @@
 
 bool Random(double pr);
 
-class Individual {
-	int gene[MAXN];
-
-public:
-	double Fitness();
+struct Individual {
+	int next[MAXN];
+	int num_truck;
+	double fitness;
+	Individual() =default;
+	bool Calc();
 };
 
 void IndividualInit(vector<Individual> &tag, int n);
