@@ -1,0 +1,47 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<cstdlib>
+#include<vector>
+using namespace std;
+const int MAXP=10000000,MAXN=35,times_mu=5,pm=2333333;//±äÒìµÄ´ÎÊýºÍ¸ÅÂÊ 
+struct Individual
+{
+	int pre[MAXN],next[MAXN],num_car;
+};
+int N;
+std::vector<Individual>w;
+double fitness(Individual x){};
+void Mutation(Individual x)
+{
+	double x_fit=fitness(x);bool flag=0;
+	x.pre[0]=x.next[0]=0;
+	for(int i=1;i<=N;i++)x.pre[x.next[i]]=i;//ÀûÓÃºó¼Ì°ÑÇ°Çý¸ã³öÀ´ 
+	for(int i=1;i<=times_mu;i++)
+	{
+		Individual temp=x;
+		int a=rand()%N+1,b=rand()%N+1;
+		if(a!=b&&rand()%MAXP<=pm){//Âú×ã¸ÅÂÊ²¢ÇÒÁ½µã²»ÏàÍ¬¾Í±äÒì 
+			if(temp.next[a]==b||temp.next[b]==a){//µÚÒ»ÖÖ»¥ÎªÇ°Çýºó¼Ì 
+				if(temp.next[b]==a){int t=a;a=b;b=t;}
+				temp.next[temp.pre[a]]=b;temp.pre[temp.next[b]]=a;
+				temp.next[a]=temp.next[b];temp.pre[b]=temp.pre[a];
+				temp.next[b]=a;temp.pre[a]=b;
+			}
+			else{//µÚ¶þÖÖ²»ÊÇ»¥ÎªÇ°Çýºó¼Ì 
+				temp.next[temp.pre[a]]=b;temp.next[temp.pre[b]]=a;
+				temp.pre[temp.next[a]]=b;temp.pre[temp.next[b]]=a;
+				int t=temp.pre[a];temp.pre[a]=temp.pre[b];temp.pre[b]=t;
+				t=temp.next[a];temp.next[a]=temp.next[b];temp.next[b]=t;//Á½ÖÖ½»»»Ç°Çýºó¼ÌµÄ·½Ê½
+			}
+			if(fitness(temp)>=x_fit)w.push_back(temp),flag=1;//±äÒì³öÀ´µÄ¸üÓÅ±ã¼ÓÈëÏÂÒ»´ú 
+		}
+	}
+	if(!flag)w.push_back(x);//Ã»ÓÐ²úÉúÏÂÒ»´ú£¬×Ô¼º½øÈëÏÂÒ»´ú 
+	return;
+}
+int main()
+{
+	return 0;
+}
